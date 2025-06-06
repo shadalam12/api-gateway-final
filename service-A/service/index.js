@@ -3,7 +3,7 @@ import querystring from 'querystring';
 import htmlparser from 'node-html-parser';
 const app = express();
 const port = 3001;
-
+//  Universal body parser
 function universalBodyParser(options = {}) {
   return function(req, res, next) {
     if (req.method !== 'POST' && req.method !== 'PUT' && req.method !== 'PATCH') {
@@ -74,7 +74,7 @@ function parseMultipartData(data, contentType) {
 
 app.use(universalBodyParser());
 
-
+// Handle POST requests
 app.all('/*url', (req, res) => { // Use app.all to catch any method on any path
   res.status(200).send({
     message: 'Hello from Service A!',
