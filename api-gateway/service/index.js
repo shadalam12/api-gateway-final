@@ -1,17 +1,27 @@
-const express = require('express');
-const proxy = require('express-http-proxy');
+import express from 'express';
+import url from 'url';
+import proxy from 'express-http-proxy';
+import rateLimit from 'express-rate-limit';
+import { connectDB } from '../database/connection.js';
+import Microservice from '../model/microserviceSchema.js';
+
+const serviceRegistry = {};
 const app = express();
 const port = 3000;
-const url = require('url');
-const rateLimit = require('express-rate-limit');
 
-// Service registry
-const serviceRegistry = {
-  A: {url: 'http://localhost:3001', time: 15*60*1000, limit: 100},
-  B: {url: 'http://localhost:3002', time: 10*60*1000, limit: 200},
-  C: {url: 'http://localhost:3003', time: 5*60*1000, limit: 300},
-};
+connectDB();
 
+export const rows = await Microservice.find();
+
+rows.forEach(row => {
+  serviceRegistry[row.name] = {
+    url: row.url,
+    time: row.maxTime,
+    limit: row.maxLimit,
+  };
+})
+
+console.log('Service registry:', serviceRegistry);
 
 console.log('Proxy configured with routes:');
 for (const prefix in serviceRegistry) {
