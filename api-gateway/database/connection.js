@@ -1,17 +1,24 @@
-import mongoose from "mongoose";
+// Step 1: Import Sequelize
+import { Sequelize, DataTypes } from 'sequelize';
 
-const url = "mongodb+srv://baba:b2aba2@cluster0.7hmk5xj.mongodb.net/microservices?retryWrites=true&w=majority&appName=Cluster0";
+// Step 2: Set up database connection
+export const sequelize = new Sequelize({
+  dialect: 'mysql',
+  host: 'localhost',      // MySQL host
+  port: 3306,             // Default MySQL port
+  username: 'root',       // Your MySQL username
+  password: 'Alambaba@7033', // Your MySQL password
+  database: 'apigateway',
+  logging: false,         // Database name
+});
 
-//  Connect to MongoDB
-export const connectDB = async () => {
+// Step 3: Test the connection
+export async function testConnection() {
   try {
-    await mongoose.connect(url, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-    console.log("MongoDB connected");
+    await sequelize.authenticate();
+    console.log('✅ Connection to MySQL has been established successfully.');
   } catch (error) {
-    console.error("MongoDB connection error:", error);
-    process.exit(1);
+    console.error('❌ Unable to connect to the database:', error.message);
+    process.exit(1); // Exit on connection failure
   }
-};
+}

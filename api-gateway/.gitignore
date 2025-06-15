@@ -2,3 +2,12 @@ node_modules
 package-lock.json
 .DS_Store
 package.json
+controller/serviceEnvController.js
+controller/gatewayController.js
+model/request_log.js
+routes/gateway.js
+service/mappingController.js 
+service/serviceController.js 
+service/signupService.js
+app.js 
+.env

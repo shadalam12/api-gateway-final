@@ -1,20 +1,18 @@
-import express from 'express';
-import querystring from 'querystring';
-import htmlparser from 'node-html-parser';
-const app = express();
-const port = 3001;
-//  Universal body parser
-function universalBodyParser(options = {}) {
+// Universal body parser
+export default function universalBodyParser(options = {}) {
   return function(req, res, next) {
+    // Skip non-POST/PUT/PATCH requests
     if (req.method !== 'POST' && req.method !== 'PUT' && req.method !== 'PATCH') {
       return next();
     }
 
+    // Read the request body
     let data = '';
     req.on('data', chunk => {
       data += chunk.toString();
     });
 
+    // Parse the request body
     req.on('end', () => {
       try {
         const contentType = req.headers['content-type'] || '';
@@ -42,6 +40,7 @@ function universalBodyParser(options = {}) {
   };
 }
 
+// Try to automatically parse the request body
 function tryAutoParse(data) {
   try {
     return JSON.parse(data); 
@@ -54,6 +53,7 @@ function tryAutoParse(data) {
   }
 }
 
+// Parse multipart/form-data
 function parseMultipartData(data, contentType) {
   const boundary = contentType.split('boundary=')[1];
   const parts = data.split(`--${boundary}`);
@@ -71,22 +71,3 @@ function parseMultipartData(data, contentType) {
   
   return result;
 }
-
-app.use(universalBodyParser());
-
-// Handle POST requests
-app.all('/*url', (req, res) => { // Use app.all to catch any method on any path
-  res.status(200).send({
-    message: 'Hello from Service A!',
-    method: req.method,
-    url: req.originalUrl,
-    query: req.query,
-    headers: req.headers,
-    data: req.body,
-    timestamp: new Date().toISOString(),
-  });
-});
-
-app.listen(port, () => {
-  console.log(`Service A listening at http://localhost:${port}`);
-});
