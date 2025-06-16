@@ -2,6 +2,7 @@ import proxy from 'express-http-proxy';
 import url from 'url';
 import { loadServiceRegistry } from '../lib/serviceRegistry.js';
 import RequestLog from '../model/requestLogger.js'
+import logger from '../lib/logger.js';
 
 // Proxy middleware
 export async function apiGateway() {
@@ -14,6 +15,7 @@ export async function apiGateway() {
 
     // If the path is empty, send a welcome message
     if (pathSegments.length === 0) {
+      logger.info('Root request received. Sending API gateway greeting.');
       return res.status(200).send('Welcome to the Proxy. Try /A/ or /B/');
     }
 
@@ -27,11 +29,19 @@ export async function apiGateway() {
       // Construct the new path
       const newPath = '/' + pathSegments.slice(1).join('/') + (url.parse(req.originalUrl).search || '');
 
+      logger.info(`Proxying request: [${req.method}] ${req.originalUrl} → ${targetServiceUrl}${newPath}`);
+
       // Proxy the request
       const serviceProxy = proxy(targetServiceUrl, {
         proxyReqPathResolver: () => newPath,
 
+        proxyReqBodyDecorator: (body) => {
+          logger.debug(`Body forwarded for [${servicePrefix}]: ${JSON.stringify(body)}`);
+          return body;
+        },
+
         userResDecorator: async (proxyRes, proxyResData, userReq, userRes) => {
+          logger.info(`Response from [${servicePrefix}]: ${proxyRes.statusCode}`);
           try {
             // Log the request
             await RequestLog.create({
@@ -51,6 +61,7 @@ export async function apiGateway() {
       // Proxy the request
       return serviceProxy(req, res, next);
     } else {
+      logger.warn(`Unmapped service prefix "${servicePrefix}". Path: ${req.path}`);
       // If no target service is found, return a 404
       return res.status(404).send(`Service not found for prefix: ${servicePrefix}`);
     }

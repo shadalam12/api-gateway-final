@@ -11,3 +11,4 @@ service/serviceController.js
 service/signupService.js
 app.js 
 .env
+logs
