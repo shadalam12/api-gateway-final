@@ -20,6 +20,10 @@ const Client = sequelize.define('client', {
   password: {
     type: DataTypes.STRING(100),
     allowNull: false
+  },
+  role : {
+    type: DataTypes.STRING(10),
+    defaultValue: 'client'
   }
 }, {
   timestamps: true

@@ -7,6 +7,7 @@ import envRoutes from './routes/envRoutes.js';
 import serviceRoutes from './routes/serviceRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import { protectRoute } from './middleware/auth.js';
+import { protectClientRoute } from './middleware/clientAuth.js';
 import { apiGateway } from './gateway/apiGateway.js'; 
 import { rateLimiter } from './middleware/rateLimiter.js';
 import { initRateLimiters } from './middleware/rateLimiterService.js';
@@ -35,8 +36,8 @@ async function startServer() {
 
   // Route setup
   app.use("/client", clientRoutes); // Client routes          
-  app.use("/env", protectRoute, envRoutes); // Environment routes
-  app.use("/service", protectRoute, serviceRoutes); // Service routes
+  app.use("/client/env", protectClientRoute, envRoutes); // Environment routes
+  app.use("/client/service", protectClientRoute, serviceRoutes); // Service routes
   app.use("/user", userRoutes); // User routes
   app.use("/", protectRoute, rateLimiter, rateLimitForService,  gateway);  // Apply rate limiting
 

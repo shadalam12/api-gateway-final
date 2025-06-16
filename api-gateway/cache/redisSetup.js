@@ -1,12 +1,17 @@
 import { createClient } from 'redis';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+const { REDIS_USERNAME, REDIS_PASSWORD, REDIS_HOST, REDIS_PORT } = process.env;
 
 // Redis connection steup
 const redisClient = createClient({
-    username: 'default',
-    password: 'y1GW7AVWjyAfjC5flXLcoZYEkQoIsy20',
+    username: REDIS_USERNAME,
+    password: REDIS_PASSWORD,
     socket: {
-        host: 'redis-18106.crce179.ap-south-1-1.ec2.redns.redis-cloud.com',
-        port: 18106
+        host: REDIS_HOST,
+        port: REDIS_PORT
     }
 });
 

@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 
 // Register a new client
 export const registerClient = async (req, res) => {
-    const { name, email, password } = req.body;
+    const { name, email, password, role } = req.body;
     try {
         if (!name || !email || !password) {
             return res.status(400).send("Please fill all the fields");
@@ -27,6 +27,7 @@ export const registerClient = async (req, res) => {
             name,
             email,
             password: hashedPassword,
+            role
         });
 
         if (newClient) {
@@ -37,6 +38,7 @@ export const registerClient = async (req, res) => {
                 _id: newClient._id,
                 name: newClient.name,
                 email: newClient.email,
+                role: newClient.role
             });
         } else {
             return res.status(400).send("Invalid client data");
@@ -73,6 +75,7 @@ export const loginClient = async (req, res) => {
             _id: client._id,
             name: client.name,
             email: client.email,
+            role: client.role
         });
     } catch (error) {
         console.log("Error in loginClient:", error.message);
