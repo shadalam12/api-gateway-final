@@ -2,8 +2,10 @@ import { RouteMapping } from '../model/mapping.js';
 
 // Load the service registry
 export async function loadServiceRegistry() {
+  
   // Query the database
   const rows = await RouteMapping.findAll();
+
   // Build the registry
   const registry = {};
   

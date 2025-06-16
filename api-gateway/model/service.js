@@ -26,6 +26,7 @@ const Service = sequelize.define('service', {
   timestamps: true,     // createdAt and updatedAt columns
 });
 
+// Define associations
 Service.associate = (models) => {
   Service.hasMany(models.Client, {
     foreignKey: 'client_id',

@@ -18,7 +18,9 @@ export const rateLimiter = (req, res, next) => {
   // Get the rate limit for the user's role
   const maxRequests = limits[role] || limits['guest'];
 
+  // Apply rate limiting
   const limiter = rateLimit({
+    // Use the Redis store
     store: new RedisStore({ sendCommand: (...args) => redisClient.sendCommand(args) }),
     windowMs: 15 * 60 * 1000, // 15 minutes
     max: maxRequests,

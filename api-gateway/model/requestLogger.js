@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 // Define the RequestLog model
 const RequestLogSchema = new mongoose.Schema(
   {
+    // Model attributes are defined here
     path: { type: String, required: true },
     ip_address: { type: String, required: true },
     status_code: { type: Number, required: true },

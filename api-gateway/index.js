@@ -7,34 +7,38 @@ import envRoutes from './routes/envRoutes.js';
 import serviceRoutes from './routes/serviceRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import { protectRoute } from './middleware/auth.js';
-import { apiGateway } from './gateway/apiGateway.js'; // renamed to match the async factory
+import { apiGateway } from './gateway/apiGateway.js'; 
 import { rateLimiter } from './middleware/rateLimiter.js';
 import { initRateLimiters } from './middleware/rateLimiterService.js';
 import { connectDB } from './database/mongo_connection.js';
 import cors from 'cors';
 
+// Load environment variables
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3000;
 
+// Middleware
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors());
 
+// Test the connection
 testConnection();
 connectDB();
 
+// Start the server
 async function startServer() {
   const gateway = await apiGateway(); // await the async gateway loader
   const rateLimitForService = await initRateLimiters();
 
   // Route setup
-  app.use("/client", clientRoutes);           // fixed typo: added leading slash
-  app.use("/env", protectRoute, envRoutes);
-  app.use("/service", protectRoute, serviceRoutes);
-  app.use("/user", userRoutes);
-  app.use("/", protectRoute, rateLimiter, rateLimitForService,  gateway); // ✅ now a proper middleware
+  app.use("/client", clientRoutes); // Client routes          
+  app.use("/env", protectRoute, envRoutes); // Environment routes
+  app.use("/service", protectRoute, serviceRoutes); // Service routes
+  app.use("/user", userRoutes); // User routes
+  app.use("/", protectRoute, rateLimiter, rateLimitForService,  gateway);  // Apply rate limiting
 
   await sequelize.sync(); // Ensures DB is ready
 

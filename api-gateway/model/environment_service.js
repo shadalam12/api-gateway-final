@@ -18,6 +18,7 @@ export const EnvironmentService = sequelize.define('environment_service', {
   timestamps: true,     // createdAt and updatedAt columns
 });
 
+// Define associations
 EnvironmentService.associate = (models) => {
   EnvironmentService.hasMany(models.Service, {
     foreignKey: 'service_id',

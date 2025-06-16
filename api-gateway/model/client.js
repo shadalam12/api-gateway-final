@@ -3,6 +3,7 @@ import { sequelize } from '../database/connection.js';
 
 // Define the Client model
 const Client = sequelize.define('client', {
+  // Model attributes are defined here
   client_id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,

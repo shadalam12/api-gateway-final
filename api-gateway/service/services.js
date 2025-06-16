@@ -3,7 +3,7 @@ import cors from 'cors';
 import universalBodyParser from '../middleware/universalBodyParser.js';
 
 
-// ✅ Create separate apps for each service
+// Create separate apps for each service
 const ports = [3001, 3002, 3003];
 const names = ['Service A', 'Service B', 'Service C'];
 
@@ -15,6 +15,7 @@ for (let i = 0; i < ports.length; i++) {
   app.use(cors());
   app.use(universalBodyParser());
 
+  // Route setup
   app.all('/*url', (req, res) => {
     try {
       if (req.body) {
@@ -27,7 +28,7 @@ for (let i = 0; i < ports.length; i++) {
           data: req.body,
           timestamp: new Date().toISOString(),
         });
-      }
+      } 
     } catch (error ) {
       console.error('Proxy error:', error.message);
       res.status(error?.response?.status || 500).json({

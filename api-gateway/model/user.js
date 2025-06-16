@@ -3,6 +3,7 @@ import { sequelize } from '../database/connection.js';
 
 // Define the User model
 const User = sequelize.define('user', {
+  // Model attributes are defined here
   user_id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -25,7 +26,8 @@ const User = sequelize.define('user', {
     defaultValue: 'guest'
   }
 }, {
-  timestamps: true
+  // Other model options go here
+  timestamps: true // createdAt columns
 });
 
 export default User;

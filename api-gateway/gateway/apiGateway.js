@@ -48,8 +48,10 @@ export async function apiGateway() {
         preserveHostHdr: true,
       });
 
+      // Proxy the request
       return serviceProxy(req, res, next);
     } else {
+      // If no target service is found, return a 404
       return res.status(404).send(`Service not found for prefix: ${servicePrefix}`);
     }
   };
